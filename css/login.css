@@ -1,0 +1,66 @@
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    /* Adding border */
+}
+
+.form-container h3 {
+    text-align: center;
+    color: #474e5d;
+    margin-bottom: 20px;
+}
+
+.form-container .form-label {
+    color: #474e5d;
+}
+
+.form-control {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #474e5d;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #333;
+}
+
+.form-text {
+    color: #777;
+    font-size: 14px;
+}
+
+.signup-btn {
+    margin-top: 20px;
+}
+
+.signup-btn a {
+    display: inline-block;
+    padding: 12px 24px;
+    /* Match the primary button color */
+    color: #474e5d;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+.signup-btn a:hover {
+    background-color: #333;
+    /* Darken on hover */
+}
