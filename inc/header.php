@@ -1,5 +1,13 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+$isLoggedIn = isset($_SESSION['user_email']);
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +33,8 @@
         }
 
         .topnav a.active {
-            background-color: #222529; /* Darker background for active link */
+            background-color: #222529;
+            /* Darker background for active link */
         }
 
         .topnav .icon {
@@ -65,19 +74,25 @@
         /* Header */
         .header {
             text-align: center;
-            padding: 80px 20px; /* Adjusted padding */
-            background-color: #cdfff7; /* Grey background */
-            color: #333; /* Text color */
-            margin-bottom: 20px; /* Added margin */
+            padding: 80px 20px;
+            /* Adjusted padding */
+            background-color: #cdfff7;
+            /* Grey background */
+            color: #333;
+            /* Text color */
+            margin-bottom: 20px;
+            /* Added margin */
         }
 
         .header h1 {
             margin-bottom: 20px;
-            font-size: 36px; /* Increased font size */
+            font-size: 36px;
+            /* Increased font size */
         }
 
         .header p {
-            font-size: 18px; /* Adjusted font size */
+            font-size: 18px;
+            /* Adjusted font size */
         }
 
         /* Flexbox adjustment for navbar */
@@ -91,8 +106,9 @@
         }
     </style>
 </head>
+
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="http://localhost/5007CEM/mainpage.php">POTATO AGENCY</a>
             <button class="navbar-toggler" type="button" onclick="toggleNavbar()">
@@ -104,24 +120,40 @@
                         <a class="nav-link" href="http://localhost/5007CEM/mainpage.php">Share</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
+                        <a class="nav-link" href="aboutus.php">About</a>
                     </li>
+                    <?php if ($isLoggedIn) : ?>
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, <?php echo htmlspecialchars($_SESSION['user_email']); ?></span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="confirmLogout()">Logout</a>
+                        </li>
+                    <?php else : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost/5007CEM/login.php">Login/Signup</a>
+                        </li>
+                    <?php endif; ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost/5007CEM/login.php">Login/Signup</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href=""><i
-                                class="fa fa-shopping-cart" style="font-size:22px"></i></a>
+                        <a class="nav-link" href=""><i class="fa fa-shopping-cart" style="font-size:22px"></i></a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
     <script>
+        function confirmLogout() {
+            if (confirm("Are you sure you want to logout?")) {
+                window.location.href = "logout.php";
+            }
+        }
+
         function toggleNavbar() {
             const navbar = document.getElementById("navbarNav");
             navbar.classList.toggle("show");
         }
     </script>
 </body>
+
 </html>
