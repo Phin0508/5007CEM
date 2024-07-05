@@ -1,0 +1,15 @@
+.comment-board {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.comment {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.comment-form {
+    margin-bottom: 20px;
+}

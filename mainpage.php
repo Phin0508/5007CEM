@@ -30,7 +30,7 @@ session_start();
     <div class="row">
         <div class="column">
             <img src="malaysia/Sempurna.jpg" alt="Sabah" style="width:100%"> <!-- Add your image here -->
-            <h2>Sabah</h2>
+            <h2>Sempurna</h2>
             <p>0 itineraries</p>
             <a href="sabah.html" class="btn btn-primary">View More</a> <!-- Button to link to other page -->
         </div>

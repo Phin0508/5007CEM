@@ -117,7 +117,7 @@ $isLoggedIn = isset($_SESSION['user_email']);
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost/5007CEM/mainpage.php">Share</a>
+                        <a class="nav-link" href="http://localhost/5007CEM/share.php">Share</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="aboutus.php">About</a>

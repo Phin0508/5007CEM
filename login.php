@@ -9,6 +9,7 @@ if(isset($_POST["login"])) {
     if(empty($email) || empty($password)) {
         echo "<div class='alert alert-danger'>Please fill in all fields</div>";
     } else {
+        // Check customer table
         $stmt = $conn->prepare("SELECT * FROM customer WHERE cus_username = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -16,9 +17,6 @@ if(isset($_POST["login"])) {
         
         if($result->num_rows == 1) {
             $user = $result->fetch_assoc();
-            // For debugging purposes only, remove in production
-            echo "User found: " . print_r($user, true);
-            
             if(password_verify($password, $user["cus_password"])) {
                 $_SESSION['user_id'] = $user['id']; // Make sure 'id' is the correct column name
                 $_SESSION['user_email'] = $user['cus_username'];
@@ -26,12 +24,27 @@ if(isset($_POST["login"])) {
                 exit();
             } else {
                 echo "<div class='alert alert-danger'>Invalid password</div>";
-                // For debugging purposes only, remove in production
-                echo "Entered password: " . $password . "<br>";
-                echo "Stored hash: " . $user["cus_password"];
             }
         } else {
-            echo "<div class='alert alert-danger'>Email does not exist</div>";
+            // Check admin table
+            $stmt = $conn->prepare("SELECT * FROM admin WHERE Admin_user = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if($result->num_rows == 1) {
+                $admin = $result->fetch_assoc();
+                if($password === $admin["Admin_pass"]) { // Assuming admin password is not hashed
+                    $_SESSION['admin_id'] = $admin['Admin_id'];
+                    $_SESSION['admin_email'] = $admin['Admin_user'];
+                    header("Location: adminlogbook.php");
+                    exit();
+                } else {
+                    echo "<div class='alert alert-danger'>Invalid admin password</div>";
+                }
+            } else {
+                echo "<div class='alert alert-danger'>Email does not exist</div>";
+            }
         }
     }
 }
@@ -71,6 +84,8 @@ if(isset($_POST["login"])) {
             <a href="signup.php">Don't have an account? Sign up here.</a>
         </div>
     </div>
+    
+    <a href="admin/adminlogin.php" class="btn btn-secondary admin-login-btn">Admin Login</a>
 
     <?php include('inc/footer.php'); ?>
 </body>
