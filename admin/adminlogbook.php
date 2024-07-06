@@ -51,6 +51,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_location'])) {
     }
     $insertStmt->close();
 }
+// Handle location deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_location'])) {
+    $location_id = $_POST['location_id'];
+    $deleteLocationSql = "DELETE FROM locations WHERE id = ?";
+    $deleteLocationStmt = $conn->prepare($deleteLocationSql);
+    $deleteLocationStmt->bind_param('i', $location_id);
+    if ($deleteLocationStmt->execute()) {
+        $locationDeleteMessage = "Location deleted successfully!";
+    } else {
+        $locationDeleteError = "Error deleting location: " . $conn->error;
+    }
+    $deleteLocationStmt->close();
+}
+// Handle booking deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
+    $booking_id = $_POST['booking_id'];
+    $deleteBookingSql = "DELETE FROM bookings WHERE id = ?";
+    $deleteBookingStmt = $conn->prepare($deleteBookingSql);
+    $deleteBookingStmt->bind_param('i', $booking_id);
+    if ($deleteBookingStmt->execute()) {
+        $bookingDeleteMessage = "Booking deleted successfully!";
+    } else {
+        $bookingDeleteError = "Error deleting booking: " . $conn->error;
+    }
+    $deleteBookingStmt->close();
+}
+
+
+// Fetch all locations
+$locationSql = "SELECT * FROM locations ORDER BY id DESC";
+$locationResult = $conn->query($locationSql);
+$locations = $locationResult->fetch_all(MYSQLI_ASSOC);
+
 
 // Fetch all bookings
 $sql = "SELECT * FROM bookings ORDER BY id DESC";
@@ -65,6 +98,7 @@ $comments = $commentResult->fetch_all(MYSQLI_ASSOC);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,87 +109,91 @@ $comments = $commentResult->fetch_all(MYSQLI_ASSOC);
     <style>
         .admin-section {
             margin-bottom: 30px;
-        }/* admin-style.css */
+        }
 
-body {
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif;
-}
+        /* admin-style.css */
 
-.navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,.1);
-}
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
 
-.container {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,.1);
-    padding: 30px;
-    margin-top: 30px;
-}
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+        }
 
-h1 {
-    color: #333;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-    margin-bottom: 30px;
-}
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            padding: 30px;
+            margin-top: 30px;
+        }
 
-.admin-section {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
-}
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
 
-.admin-section h2 {
-    color: #007bff;
-    margin-bottom: 20px;
-}
+        .admin-section {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
 
-.table {
-    background-color: #ffffff;
-}
+        .admin-section h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
 
-.table thead {
-    background-color: #007bff;
-    color: #ffffff;
-}
+        .table {
+            background-color: #ffffff;
+        }
 
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
+        .table thead {
+            background-color: #007bff;
+            color: #ffffff;
+        }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-}
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
 
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
 
-.btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-}
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
 
-.form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-}
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
 
-.alert {
-    border-radius: 8px;
-}
-.admin-section {
-    margin-bottom: 30px;
-}
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+        }
+
+        .alert {
+            border-radius: 8px;
+        }
+
+        .admin-section {
+            margin-bottom: 30px;
+        }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
@@ -179,17 +217,29 @@ h1 {
     <div class="container mt-4">
         <h1 class="mb-4">Admin Panel</h1>
 
-        <?php if (isset($addMessage)): ?>
+        <?php if (isset($addMessage)) : ?>
             <div class="alert alert-success"><?php echo $addMessage; ?></div>
         <?php endif; ?>
-        <?php if (isset($addError)): ?>
+        <?php if (isset($addError)) : ?>
             <div class="alert alert-danger"><?php echo $addError; ?></div>
         <?php endif; ?>
-        <?php if (isset($deleteMessage)): ?>
+        <?php if (isset($deleteMessage)) : ?>
             <div class="alert alert-success"><?php echo $deleteMessage; ?></div>
         <?php endif; ?>
-        <?php if (isset($deleteError)): ?>
+        <?php if (isset($deleteError)) : ?>
             <div class="alert alert-danger"><?php echo $deleteError; ?></div>
+        <?php endif; ?>
+        <?php if (isset($locationDeleteMessage)) : ?>
+            <div class="alert alert-success"><?php echo $locationDeleteMessage; ?></div>
+        <?php endif; ?>
+        <?php if (isset($locationDeleteError)) : ?>
+            <div class="alert alert-danger"><?php echo $locationDeleteError; ?></div>
+        <?php endif; ?>
+        <?php if (isset($bookingDeleteMessage)) : ?>
+            <div class="alert alert-success"><?php echo $bookingDeleteMessage; ?></div>
+        <?php endif; ?>
+        <?php if (isset($bookingDeleteError)) : ?>
+            <div class="alert alert-danger"><?php echo $bookingDeleteError; ?></div>
         <?php endif; ?>
 
         <!-- Form to Add New Location -->
@@ -219,13 +269,53 @@ h1 {
                 <button type="submit" class="btn btn-primary" name="add_location">Add Location</button>
             </form>
         </div>
+        <!-- Locations Management -->
+        <div class="admin-section">
+            <h2>Manage Locations</h2>
+            <?php if (empty($locations)) : ?>
+                <p>No locations found.</p>
+            <?php else : ?>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Location ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Image Path</th>
+                            <th>Trip Price</th>
+                            <th>View More Link</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($locations as $location) : ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($location['id']); ?></td>
+                                <td><?php echo htmlspecialchars($location['name']); ?></td>
+                                <td><?php echo htmlspecialchars($location['description']); ?></td>
+                                <td><?php echo htmlspecialchars($location['image_path']); ?></td>
+                                <td><?php echo htmlspecialchars($location['trip_price']); ?></td>
+                                <td><?php echo htmlspecialchars($location['view_more_link']); ?></td>
+                                <td>
+                                    <form method="POST" style="display:inline;">
+                                        <input type="hidden" name="location_id" value="<?php echo $location['id']; ?>">
+                                        <button type="submit" name="delete_location" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this location?');">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
+
 
         <!-- Bookings Table -->
         <div class="admin-section">
             <h2>Bookings</h2>
-            <?php if (empty($bookings)): ?>
+            <?php if (empty($bookings)) : ?>
                 <p>No bookings found.</p>
-            <?php else: ?>
+            <?php else : ?>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -241,7 +331,7 @@ h1 {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($bookings as $booking): ?>
+                        <?php foreach ($bookings as $booking) : ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($booking['id']); ?></td>
                                 <?php
@@ -254,7 +344,7 @@ h1 {
                                 <td>
                                     <form method="POST" style="display:inline;">
                                         <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
-                                        <button type="submit" name="delete_booking" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="submit" name="delete_booking" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this booking?');">Delete</button>
                                     </form>
                                 </td>
                             </tr>
@@ -267,9 +357,9 @@ h1 {
         <!-- Comments Management -->
         <div class="admin-section">
             <h2>User Comments</h2>
-            <?php if (empty($comments)): ?>
+            <?php if (empty($comments)) : ?>
                 <p>No comments found.</p>
-            <?php else: ?>
+            <?php else : ?>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -281,7 +371,7 @@ h1 {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($comments as $comment): ?>
+                        <?php foreach ($comments as $comment) : ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($comment['cid']); ?></td>
                                 <td><?php echo htmlspecialchars($comment['cus_username']); ?></td>
@@ -303,4 +393,5 @@ h1 {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
