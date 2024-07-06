@@ -126,6 +126,11 @@ $isLoggedIn = isset($_SESSION['user_email']);
                         <li class="nav-item">
                             <span class="nav-link">Welcome, <?php echo htmlspecialchars($_SESSION['user_email']); ?></span>
                         </li>
+                        <?php if ($isLoggedIn) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="view_booking.php">View Bookings</a>
+                            </li>
+                        <?php endif; ?>
                         <li class="nav-item">
                             <a class="nav-link" href="#" onclick="confirmLogout()">Logout</a>
                         </li>

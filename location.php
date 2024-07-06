@@ -72,41 +72,41 @@ $conn->close();
     <?php include('inc/footer.php'); ?>
 
     <script>
-      document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
+        document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
 
-    fetch('add_to_cart.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        const messageDiv = document.getElementById('message');
-        messageDiv.textContent = data.message;
-        if (data.success) {
-            messageDiv.classList.add('alert', 'alert-success');
-            messageDiv.classList.remove('alert-danger');
-        } else {
-            messageDiv.classList.add('alert', 'alert-danger');
-            messageDiv.classList.remove('alert-success');
-        }
-        console.log('Server response:', data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        const messageDiv = document.getElementById('message');
-        messageDiv.textContent = 'An error occurred while adding the item to the cart: ' + error.message;
-        messageDiv.classList.add('alert', 'alert-danger');
-        messageDiv.classList.remove('alert-success');
-    });
-});
+            fetch('add_to_cart.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = data.message;
+                if (data.success) {
+                    messageDiv.classList.add('alert', 'alert-success');
+                    messageDiv.classList.remove('alert-danger');
+                } else {
+                    messageDiv.classList.add('alert', 'alert-danger');
+                    messageDiv.classList.remove('alert-success');
+                }
+                console.log('Server response:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = 'An error occurred while adding the item to the cart: ' + error.message;
+                messageDiv.classList.add('alert', 'alert-danger');
+                messageDiv.classList.remove('alert-success');
+            });
+        });
     </script>
 </body>
 

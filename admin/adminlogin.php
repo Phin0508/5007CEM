@@ -18,8 +18,8 @@ if (isset($_POST["admin_login"])) {
             $admin = $result->fetch_assoc();
 
             if (password_verify($password, $admin["Admin_pass"])) {
-                $_SESSION['admin_id'] = $admin['Admin_id'];
-                $_SESSION['admin_user'] = $admin['Admin_user'];
+                $_SESSION['user_email'] = $admin['Admin_user'];
+                $_SESSION['user_role'] = 'admin';
                 header("Location: adminlogbook.php");
                 exit();
             } else {
