@@ -1,6 +1,13 @@
 <?php
 session_start();
+require 'src/database.php'; // Assuming you have a database connection file
+
+// Fetch all locations
+$sql = "SELECT * FROM locations ORDER BY id DESC";
+$result = $conn->query($sql);
+$locations = $result->fetch_all(MYSQLI_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,21 +35,13 @@ session_start();
 
     <!-- Location Cards -->
     <div class="row">
-        <div class="column">
-            <img src="malaysia/Sempurna.jpg" alt="Sabah" style="width:100%"> <!-- Add your image here -->
-            <h2>Sempurna</h2>
-            <a href="location.php?name=Sempurna" class="btn btn-primary">View More</a> <!-- Updated link -->
-        </div>
-        <div class="column">
-            <img src="malaysia/Penang.jpg" alt="Penang" style="width:100%"> <!-- Add your image here -->
-            <h2>Penang</h2>
-            <a href="location.php?name=Penang" class="btn btn-primary">View More</a> <!-- Updated link -->
-        </div>
-        <div class="column">
-            <img src="malaysia/Kundasang.webp" alt="Kundasang" style="width:100%"> <!-- Add your image here -->
-            <h2>Kundasang</h2>
-            <a href="location.php?name=Kundasang" class="btn btn-primary">View More</a> <!-- Updated link -->
-        </div>
+        <?php foreach ($locations as $location): ?>
+            <div class="column">
+                <img src="<?php echo htmlspecialchars($location['image_path']); ?>" alt="<?php echo htmlspecialchars($location['name']); ?>" style="width:100%">
+                <h2><?php echo htmlspecialchars($location['name']); ?></h2>
+                <a href="location.php?name=<?php echo urlencode($location['name']); ?>" class="btn btn-primary">View More</a>
+            </div>
+        <?php endforeach; ?>
     </div>
 
     <?php include('inc/footer.php'); ?>
