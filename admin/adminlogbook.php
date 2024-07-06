@@ -3,14 +3,11 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Check if the user is logged in and is an admin
 $isAdmin = isset($_SESSION['user_email']) && $_SESSION['user_role'] === 'admin';
-
-// Redirect non-admin users
-if (!$isAdmin) {
-    header('Location: login.php');
-    exit();
-}
 
 // Placeholder functions - you'll need to implement these
 function updateLocation($newLocation) {
@@ -44,10 +41,9 @@ $comments = getShareComments();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - POTATO AGENCY</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="http://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        /* Add your custom styles here */
         .admin-section {
             margin-bottom: 30px;
         }
@@ -82,7 +78,8 @@ $comments = getShareComments();
     <div class="container mt-4">
         <h1 class="mb-4">Admin Panel</h1>
 
-        <div class="admin-section">
+        <!-- Update Location Section -->
+        <div class="admin-section border p-4 mb-4">
             <h2>Update Location</h2>
             <form method="POST">
                 <div class="mb-3">
@@ -95,7 +92,8 @@ $comments = getShareComments();
             <?php endif; ?>
         </div>
 
-        <div class="admin-section">
+        <!-- Participant List Section -->
+        <div class="admin-section border p-4 mb-4">
             <h2>Participant List</h2>
             <ul class="list-group">
                 <?php foreach ($participants as $participant) : ?>
@@ -104,7 +102,8 @@ $comments = getShareComments();
             </ul>
         </div>
 
-        <div class="admin-section">
+        <!-- Share Comments Section -->
+        <div class="admin-section border p-4">
             <h2>Share Comments</h2>
             <div class="list-group">
                 <?php foreach ($comments as $comment) : ?>
@@ -121,7 +120,7 @@ $comments = getShareComments();
     <script>
         function confirmLogout() {
             if (confirm("Are you sure you want to logout?")) {
-                window.location.href = "logout.php";
+                window.location.href = "http://localhost/5007CEM/mainpage.php";
             }
         }
 

@@ -135,7 +135,7 @@ $isLoggedIn = isset($_SESSION['user_email']);
                         </li>
                     <?php endif; ?>
                     <li class="nav-item">
-                        <a class="nav-link" href=""><i class="fa fa-shopping-cart" style="font-size:22px"></i></a>
+                        <a class="nav-link" href="cart.php"><i class="fa fa-shopping-cart" style="font-size:22px"></i></a>
                     </li>
                 </ul>
             </div>

@@ -32,22 +32,21 @@ session_start();
             <img src="malaysia/Sempurna.jpg" alt="Sabah" style="width:100%"> <!-- Add your image here -->
             <h2>Sempurna</h2>
             <p>0 itineraries</p>
-            <a href="sabah.html" class="btn btn-primary">View More</a> <!-- Button to link to other page -->
+            <a href="location.php?name=Sempurna" class="btn btn-primary">View More</a> <!-- Updated link -->
         </div>
         <div class="column">
             <img src="malaysia/Penang.jpg" alt="Penang" style="width:100%"> <!-- Add your image here -->
             <h2>Penang</h2>
             <p>0 itineraries</p>
-            <a href="penang.html" class="btn btn-primary">View More</a> <!-- Button to link to other page -->
+            <a href="location.php?name=Penang" class="btn btn-primary">View More</a> <!-- Updated link -->
         </div>
         <div class="column">
             <img src="malaysia/Kundasang.webp" alt="Kundasang" style="width:100%"> <!-- Add your image here -->
             <h2>Kundasang</h2>
             <p>0 itineraries</p>
-            <a href="kuala_lumpur.html" class="btn btn-primary">View More</a> <!-- Button to link to other page -->
+            <a href="location.php?name=Kundasang" class="btn btn-primary">View More</a> <!-- Updated link -->
         </div>
     </div>
-
 
     <?php include('inc/footer.php'); ?>
 

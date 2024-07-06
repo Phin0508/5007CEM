@@ -7,6 +7,3 @@ document.getElementById('addToCart').addEventListener('click', function() {
     alert(`Added ${pax} ticket(s) to cart!`);
     // Here you would typically send this data to a server or update a cart object
 });
-function changeImage(imagePath) {
-    document.getElementById('mainImage').src = imagePath;
-}
