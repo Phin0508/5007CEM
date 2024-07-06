@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_location'])) {
     }
     $insertStmt->close();
 }
+
 // Handle location deletion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_location'])) {
     $location_id = $_POST['location_id'];
@@ -64,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_location'])) {
     }
     $deleteLocationStmt->close();
 }
+
 // Handle booking deletion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
     $booking_id = $_POST['booking_id'];
@@ -78,12 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
     $deleteBookingStmt->close();
 }
 
-
 // Fetch all locations
 $locationSql = "SELECT * FROM locations ORDER BY id DESC";
 $locationResult = $conn->query($locationSql);
 $locations = $locationResult->fetch_all(MYSQLI_ASSOC);
-
 
 // Fetch all bookings
 $sql = "SELECT * FROM bookings ORDER BY id DESC";
@@ -107,12 +107,6 @@ $comments = $commentResult->fetch_all(MYSQLI_ASSOC);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="admin/adminlogbook.css">
     <style>
-        .admin-section {
-            margin-bottom: 30px;
-        }
-
-        /* admin-style.css */
-
         body {
             background-color: #f8f9fa;
             font-family: Arial, sans-serif;
@@ -187,10 +181,6 @@ $comments = $commentResult->fetch_all(MYSQLI_ASSOC);
         .alert {
             border-radius: 8px;
         }
-
-        .admin-section {
-            margin-bottom: 30px;
-        }
     </style>
 </head>
 
@@ -246,69 +236,75 @@ $comments = $commentResult->fetch_all(MYSQLI_ASSOC);
         <div class="admin-section">
             <h2>Add New Location</h2>
             <form method="POST" action="">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Location Name</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
-                </div>
-                <div class="mb-3">
-                    <label for="image_path" class="form-label">Image Path</label>
-                    <input type="text" class="form-control" id="image_path" name="image_path" required>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="name" class="form-label">Location Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="image_path" class="form-label">Image Path</label>
+                        <input type="text" class="form-control" id="image_path" name="image_path" required>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea class="form-control" id="description" name="description" required></textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="trip_price" class="form-label">Trip Price</label>
-                    <input type="number" class="form-control" id="trip_price" name="trip_price" required>
-                </div>
-                <div class="mb-3">
-                    <label for="view_more_link" class="form-label">View More Link</label>
-                    <input type="text" class="form-control" id="view_more_link" name="view_more_link" required>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="trip_price" class="form-label">Trip Price</label>
+                        <input type="number" class="form-control" id="trip_price" name="trip_price" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="view_more_link" class="form-label">View More Link</label>
+                        <input type="text" class="form-control" id="view_more_link" name="view_more_link" required>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary" name="add_location">Add Location</button>
             </form>
         </div>
+
         <!-- Locations Management -->
         <div class="admin-section">
             <h2>Manage Locations</h2>
             <?php if (empty($locations)) : ?>
                 <p>No locations found.</p>
             <?php else : ?>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Location ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Image Path</th>
-                            <th>Trip Price</th>
-                            <th>View More Link</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($locations as $location) : ?>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td><?php echo htmlspecialchars($location['id']); ?></td>
-                                <td><?php echo htmlspecialchars($location['name']); ?></td>
-                                <td><?php echo htmlspecialchars($location['description']); ?></td>
-                                <td><?php echo htmlspecialchars($location['image_path']); ?></td>
-                                <td><?php echo htmlspecialchars($location['trip_price']); ?></td>
-                                <td><?php echo htmlspecialchars($location['view_more_link']); ?></td>
-                                <td>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="location_id" value="<?php echo $location['id']; ?>">
-                                        <button type="submit" name="delete_location" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this location?');">Delete</button>
-                                    </form>
-                                </td>
+                                <th>Location ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Image Path</th>
+                                <th>Trip Price</th>
+                                <th>View More Link</th>
+                                <th>Actions</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($locations as $location) : ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($location['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($location['name']); ?></td>
+                                    <td><?php echo htmlspecialchars($location['description']); ?></td>
+                                    <td><?php echo htmlspecialchars($location['image_path']); ?></td>
+                                    <td><?php echo htmlspecialchars($location['trip_price']); ?></td>
+                                    <td><?php echo htmlspecialchars($location['view_more_link']); ?></td>
+                                    <td>
+                                        <form method="POST" style="display:inline;">
+                                            <input type="hidden" name="location_id" value="<?php echo $location['id']; ?>">
+                                            <button type="submit" name="delete_location" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this location?');">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
-
 
         <!-- Bookings Table -->
         <div class="admin-section">
@@ -316,41 +312,43 @@ $comments = $commentResult->fetch_all(MYSQLI_ASSOC);
             <?php if (empty($bookings)) : ?>
                 <p>No bookings found.</p>
             <?php else : ?>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Booking ID</th>
-                            <?php
-                            foreach ($bookings[0] as $key => $value) {
-                                if ($key != 'id') {
-                                    echo "<th>" . ucfirst(str_replace('_', ' ', $key)) . "</th>";
-                                }
-                            }
-                            ?>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($bookings as $booking) : ?>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td><?php echo htmlspecialchars($booking['id']); ?></td>
+                                <th>Booking ID</th>
                                 <?php
-                                foreach ($booking as $key => $value) {
+                                foreach ($bookings[0] as $key => $value) {
                                     if ($key != 'id') {
-                                        echo "<td>" . htmlspecialchars($value) . "</td>";
+                                        echo "<th>" . ucfirst(str_replace('_', ' ', $key)) . "</th>";
                                     }
                                 }
                                 ?>
-                                <td>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
-                                        <button type="submit" name="delete_booking" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this booking?');">Delete</button>
-                                    </form>
-                                </td>
+                                <th>Actions</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($bookings as $booking) : ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($booking['id']); ?></td>
+                                    <?php
+                                    foreach ($booking as $key => $value) {
+                                        if ($key != 'id') {
+                                            echo "<td>" . htmlspecialchars($value) . "</td>";
+                                        }
+                                    }
+                                    ?>
+                                    <td>
+                                        <form method="POST" style="display:inline;">
+                                            <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
+                                            <button type="submit" name="delete_booking" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this booking?');">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
 
@@ -360,33 +358,35 @@ $comments = $commentResult->fetch_all(MYSQLI_ASSOC);
             <?php if (empty($comments)) : ?>
                 <p>No comments found.</p>
             <?php else : ?>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Comment ID</th>
-                            <th>Username</th>
-                            <th>Comment</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($comments as $comment) : ?>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td><?php echo htmlspecialchars($comment['cid']); ?></td>
-                                <td><?php echo htmlspecialchars($comment['cus_username']); ?></td>
-                                <td><?php echo htmlspecialchars($comment['com']); ?></td>
-                                <td><?php echo htmlspecialchars($comment['created_at']); ?></td>
-                                <td>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="comment_id" value="<?php echo $comment['cid']; ?>">
-                                        <button type="submit" name="delete_comment" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</button>
-                                    </form>
-                                </td>
+                                <th>Comment ID</th>
+                                <th>Username</th>
+                                <th>Comment</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($comments as $comment) : ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($comment['cid']); ?></td>
+                                    <td><?php echo htmlspecialchars($comment['cus_username']); ?></td>
+                                    <td><?php echo htmlspecialchars($comment['com']); ?></td>
+                                    <td><?php echo htmlspecialchars($comment['created_at']); ?></td>
+                                    <td>
+                                        <form method="POST" style="display:inline;">
+                                            <input type="hidden" name="comment_id" value="<?php echo $comment['cid']; ?>">
+                                            <button type="submit" name="delete_comment" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
     </div>
