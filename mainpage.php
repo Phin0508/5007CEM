@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'src/database.php'; // Assuming you have a database connection file
+require 'src/database.php';
 
 // Fetch all locations
 $sql = "SELECT * FROM locations ORDER BY id DESC";
@@ -27,13 +27,13 @@ $locations = $result->fetch_all(MYSQLI_ASSOC);
         <p>Book your trip right now!</p>
     </div>
 
-    <!-- Search Form -->
+
     <form class="example" action="/action_page.php">
         <input type="text" placeholder="Search.." name="search2">
         <button type="submit"><i class="fa fa-search"></i></button>
     </form>
 
-    <!-- Location Cards -->
+    
     <div class="row">
         <?php foreach ($locations as $location): ?>
             <div class="column">

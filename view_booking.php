@@ -1,17 +1,17 @@
 <?php
 session_start();
-require 'src/database.php'; // Assuming you have a database connection file
+require 'src/database.php'; 
 
-// Check if the user is logged in
+
 if (!isset($_SESSION['user_email'])) {
-    // Redirect to login page if not logged in
+    
     header("Location: login.php");
     exit();
 }
 
 $user_email = $_SESSION['user_email'];
 
-// First, let's check the structure of the bookings table
+
 $table_info_sql = "DESCRIBE bookings";
 $table_info_result = $conn->query($table_info_sql);
 

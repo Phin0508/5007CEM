@@ -18,7 +18,7 @@ if(isset($_POST["login"])) {
         if($result->num_rows == 1) {
             $user = $result->fetch_assoc();
             if(password_verify($password, $user["cus_password"])) {
-                $_SESSION['user_id'] = $user['id']; // Make sure 'id' is the correct column name
+                $_SESSION['user_id'] = $user['id']; 
                 $_SESSION['user_email'] = $user['cus_username'];
                 header("Location: mainpage.php");
                 exit();
